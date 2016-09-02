@@ -11,3 +11,29 @@ body {
 a {
   color: #00B7FF;
 }
+
+.from-message {
+  background-color: #353535;
+  color: #787878;
+}
+
+.to-message {
+  background-color: #353535;
+  color: #787878;
+}
+
+.message {
+  color: #DFDFDF !important;
+}
+
+.default-text {
+  color: #787878;
+}
+
+.from-name {
+  color: #00796B !important;
+}
+
+.to-name {
+  color: #607D8B !important;
+}

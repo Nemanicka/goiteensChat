@@ -57,29 +57,50 @@ app.use(function(err, req, res, next) {
   });
 });
 
+var usersCtrl = require("./contollers/users.controller");
+
+var usersOnline = [];
+var userSockets = {};
+
 var io = require('socket.io').listen(8080); 
 io.sockets.on('connection', function (socket) {
-  console.log("connected", socket.json.username);
-
-  var ID = (socket.id).toString().substr(0, 5);
-  var time = (new Date).toLocaleTimeString();
-  socket.json.send({'event': 'connected', 'id': ID, 'time': time});
+  console.log("connected");
   
-  socket.on('handshake', function (data){
-    console.log("data", data);
-    //socket.username = data.username; 
-    socket.broadcast.json.send({'event': 'userJoined', 'nickname': socket.username, 'time': time});
+
+  socket.on('handshake', function (data) {
+    socket.emit('handshake', {users: usersOnline});
+    socket.username = data.username; 
+    userSockets[socket.username] = socket;
+    usersOnline.push(socket.username);
+    socket.broadcast.emit('userJoined', {nickname: socket.username});
   }); 
   
   socket.on('message', function (msg) {
-    var time = (new Date).toLocaleTimeString();
-    socket.json.send({'event': 'messageSent', 'name': ID, 'text': msg, 'time': time});
-    socket.broadcast.json.send({'event': 'messageReceived', 'name': ID, 'text': msg, 'time': time})
-                                        });
+    usersCtrl.saveMessage(msg);
+    console.log(msg);
+    console.log("inf", userSockets);
+    
+    console.log("after msg", msg);
+    console.log("msg type", typeof msg);
+
+    var receiver = msg.message.to;
+    console.log("receiver = ", receiver);
+    console.log("on msg", userSockets[receiver]);
+
+    if(userSockets[receiver]) {
+      userSockets[receiver].emit('message', msg);
+    } else {
+      console.log("receiver is not active");
+    }
+  });
+
+
     socket.on('disconnect', function() {
       console.log('disconnected');
-      var time = (new Date).toLocaleTimeString();
-      io.sockets.json.send({'event': 'userSplit', 'name': ID, 'time': time});
+      var index = usersOnline.indexOf(socket.username);
+      if(index !== -1)
+        usersOnline.splice(index, 1);
+      socket.broadcast.emit('userLeft', {nickname: socket.username});
     });
 });
 

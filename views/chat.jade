@@ -7,19 +7,26 @@ block content
     div(layout="row" flex="70")
       div(layout="column" flex="30")
         md-list
-          md-list-item(class="md-2-line" ng-click="selectUser(user)" ng-class="{'nav-active': user == selectedUser}" ng-repeat="user in users")
+          md-list-item(class="md-2-line default-text" ng-click="selectUser(user)" ng-class="{'nav-active': user == selectedUser}" ng-repeat="user in users")
             span {{user}}
       div(ng-if="selectedUser" layout="column" flex)
         md-content(layout-padding flex style="height: 400px")
           md-list
-            md-list-item(ng-repeat="message in messages" class="md-2-line")
-              div(class="md-list-item-text" layout='column')
-                h4 {{message.date}}
-                h3 {{message.content}}
+            md-list-item(ng-repeat="message in messages" class="md-2-line" ng-class="{'from-message': name == message.from, 'to-message': name != message.from  }")
+              div(class="md-list-item-text" ng-if="message.from !== name" layout='column' layout-align='center start' layout-padding)
+                h4(class="to-name") {{message.from}}
+                h3(class="message") {{message.content}}
+              div(class="md-list-item-text" ng-if="message.from === name" layout='column' layout-align='center end' layout-padding)
+                h4(class="from-name") {{message.from}}
+                h3(class="message") {{message.content}}
+              div(class='md-secondary' layout="column" layout-align='start start') 
+                h5(style="margin-bottom:1px;") {{getRoughDate(message.date)}}
+                h5(style="margin-top:1px;") {{getPreciseDate(message.date)}}
+              md-divider
         md-card
           md-card-content
             md-input-container(class="md-block")
               label Say Hello!
-              textarea(ng-model='typedMessage')
+              textarea(ng-model="typedMessage")
             md-card-actions(layout="row" layout-align="end end")
               md-button(ng-click="sendMessage(typedMessage)") Send
