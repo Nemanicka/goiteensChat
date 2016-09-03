@@ -59,6 +59,13 @@ exports.readDialog = function (req, res) {
 };
 
 exports.signin = function(req, res) {
+	console.log(req.online);
+	if(req.online.indexOf(req.body.name) != -1) 
+	{
+		res.status(400).send("User is already online");
+		return;
+	}
+
     User.findOne({nickname: req.body.name}, function (err, foundUser) {
       console.log(err, foundUser);
       if(!foundUser) {
