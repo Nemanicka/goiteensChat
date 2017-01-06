@@ -113,7 +113,7 @@ var usersCtrl = require("./contollers/users.controller");
 var userSockets = {};
 
 var server = require('http').Server(app);
-var io = require('socket.io')(server).listen(7474);
+var io = require('socket.io')(server).listen(8080);
 //io.set("origins", '*'); 
 //io.set("transports", ['xhr-polling']);
 //var io = require(('socket.io');

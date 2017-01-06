@@ -13,7 +13,7 @@ angular.module("BlankApp", ["ngMaterial", "ngCookies"])
 
   if ($cookies.get('user')) {
     $scope.name = $cookies.get('user');
-    $scope.socket = io.connect('http://95.67.110.244:7474');
+    $scope.socket = io.connect('http://95.67.110.244:8080');
 	console.log("io = ", io);
     $scope.socket.on('connect', function (data) {
       $scope.socket.on('handshake', function (data) {

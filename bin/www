@@ -12,7 +12,9 @@ var http = require('http');
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || '8443');
+var port = normalizePort(process.env.PORT || '11000');
+
+console.log("port = ", port);
 app.set('port', port);
 
 /**
